@@ -4,7 +4,7 @@
 
 Feel free to use these lines as you wish. These programs load a graph in main memory as (i) a list of edges, (ii) an adjacency matrix or (iii) an adjacency list.
 
-## To compile:
+## To compile:
 
 "gcc edgelist.c -O9 -o edgelist"  
 "gcc adjmatrix.c -O9 -o adjmatrix"  
@@ -28,7 +28,7 @@ The program will load the graph in main memory and then terminate.
 
 adjmatrix is much les scallable than the two other programs for sparse graphs. adjmatrix uses O(n^2) memory (n^2 boolean), while edgelist uses O(m) (2m unsigned) and adjlist uses O(m+n) (4m+2n unsigned).
 
-## Note:
+## Note:
 
 If the graph is directed (and weighted) with selfloops and you want to make it undirected unweighted without selfloops, use the following linux command line.  
 awk '{if ($1<$2) print $1" "$2;else if ($2<$1) print $2" "$1}' net.txt | sort -n -k1,2 -u > net2.txt
