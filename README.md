@@ -26,7 +26,7 @@ The program will load the graph in main memory and then terminate.
 - adjmatrix: up to 200.000 nodes on my laptop with 8G of RAM. Takes more or less 4G of RAM and 10 seconds for 100.000 nodes.
 - adjlist: up to 200 million edges on my laptop with 8G of RAM: takes more or less 4G of RAM and 30 seconds for 100M edges.
 
-adjmatrix is much less scallable than the two other programs for sparse graphs. adjmatrix uses O(n^2) memory (n^2 boolean), while edgelist uses O(m) (2m unsigned) and adjlist uses O(m+n) (4m+2n unsigned).
+adjmatrix is much less scallable than the two other programs for sparse graphs. adjmatrix uses O(n^2) memory (n^2 boolean values), while edgelist uses O(m) (2m unsigned) and adjlist uses O(m+n) (4m+2n unsigned).
 
 ## Note:
 
