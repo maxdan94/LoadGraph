@@ -17,7 +17,7 @@ Feel free to use these lines as you wish. These programs load a graph in main me
 "./adjmatrix edgelist.txt"  
 "./adjlist edgelist.txt"
 
-"edgelist.txt" should contain the graph: one edge on each line (two unsigned long (nodes' ID)) separated by a space.  
+"edgelist.txt" should contain the graph: one edge on each line (two unsigned long (nodes' ID) separated by a space).  
 The program will load the graph in main memory and then terminate.
 
 ## Performance:
