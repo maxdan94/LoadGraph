@@ -8,14 +8,14 @@ Feel free to use these lines as you wish. These programs load a graph in main me
 
 "gcc edgelist.c -O9 -o edgelist"  
 "gcc adjmatrix.c -O9 -o adjmatrix"  
-"gcc adjlist.c -O9 -o adjlist"
+"gcc adjarray.c -O9 -o adjarray"
 
 
 ## To execute:
 
 "./edgelist edgelist.txt"  
 "./adjmatrix edgelist.txt"  
-"./adjlist edgelist.txt"
+"./adjarray edgelist.txt"
 
 "edgelist.txt" should contain the graph: one edge on each line (two unsigned long (nodes' ID) separated by a space).  
 The program will load the graph in main memory and then terminate.

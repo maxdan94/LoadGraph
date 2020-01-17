@@ -61,7 +61,6 @@ edgelist* readedgelist(char* input){
 	while (fscanf(file,"%lu %lu", &(g->edges[g->e].s), &(g->edges[g->e].t))==2) {
 		g->n=max3(g->n,g->edges[g->e].s,g->edges[g->e].t);
 		if (++(g->e)==e1) {//increase allocated RAM if needed
-
 			e1+=NLINKS;
 			g->edges=realloc(g->edges,e1*sizeof(edge));
 		}

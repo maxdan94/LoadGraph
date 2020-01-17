@@ -5,13 +5,13 @@ http://bit.ly/danisch
 maximilien.danisch@gmail.com
 
 Info:
-Feel free to use these lines as you wish. This program loads an unweighetd graph in main memory as an adjacency matrix.
+Feel free to use these lines as you wish. This program loads a graph in main memory as a list of edges.
 
 To compile:
-"gcc adjmatrix.c -O9 -o adjmatrix".
+"gcc adjlist.c -O9 -o adjlist".
 
 To execute:
-"./adjmatrix edgelist.txt".
+"./adjlist edgelist.txt".
 "edgelist.txt" should contain the graph: one edge on each line (two unsigned long (nodes' ID)) separated by a space.
 The prograph will load the graph in main memory and then terminate.
 
@@ -19,14 +19,12 @@ Note:
 If the graph is directed (and weighted) with selfloops and you want to make it undirected unweighted without selfloops, use the following linux command line.
 awk '{if ($1<$2) print $1" "$2;else if ($2<$1) print $2" "$1}' net.txt | sort -n -k1,2 -u > net2.txt
 
-Performence:
-Up to 200.000 nodes on my laptop with 8G of RAM.
-Takes more or less 4G of RAM and 10 seconds (I have an SSD hardrive) for 100.000 nodes.
+Performance:
+Up to 200 million edges on my laptop with 8G of RAM: takes more or less 4G of RAM and 30 seconds (I have an SSD hardrive) for 100M edges.
 */
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <time.h>//to estimate the runing time
 
 #define NLINKS 100000000 //maximum number of edges for memory allocation, will increase if needed
@@ -41,8 +39,9 @@ typedef struct {
 	unsigned long n;//number of nodes
 	unsigned long e;//number of edges
 	edge *edges;//list of edges
-	bool *mat;//adjacency matrix
-} adjmatrix;
+	unsigned long *cd;//cumulative degree cd[0]=0 length=n+1
+	unsigned long *adj;//concatenated lists of neighbors of all nodes
+} adjlist;
 
 //compute the maximum of three unsigned long
 inline unsigned long max3(unsigned long a,unsigned long b,unsigned long c){
@@ -51,11 +50,11 @@ inline unsigned long max3(unsigned long a,unsigned long b,unsigned long c){
 }
 
 //reading the edgelist from file
-adjmatrix* readedgelist(char* input){
+adjlist* readedgelist(char* input){
 	unsigned long e1=NLINKS;
 	FILE *file=fopen(input,"r");
 
-	adjmatrix *g=malloc(sizeof(adjmatrix));
+	adjlist *g=malloc(sizeof(adjlist));
 	g->n=0;
 	g->e=0;
 	g->edges=malloc(e1*sizeof(edge));//allocate some RAM to store edges
@@ -77,26 +76,46 @@ adjmatrix* readedgelist(char* input){
 }
 
 //building the adjacency matrix
-void mkmatrix(adjmatrix* g){
+void mkadjlist(adjlist* g){
 	unsigned long i,u,v;
-	g->mat=calloc(g->n*g->n,sizeof(bool));
-	for (i=0;i<g->e;i++){
+	unsigned long *d=calloc(g->n,sizeof(unsigned long));
+
+	for (i=0;i<g->e;i++) {
+		d[g->edges[i].s]++;
+		d[g->edges[i].t]++;
+	}
+
+	g->cd=malloc((g->n+1)*sizeof(unsigned long));
+	g->cd[0]=0;
+	for (i=1;i<g->n+1;i++) {
+		g->cd[i]=g->cd[i-1]+d[i-1];
+		d[i-1]=0;
+	}
+
+	g->adj=malloc(2*g->e*sizeof(unsigned long));
+
+	for (i=0;i<g->e;i++) {
 		u=g->edges[i].s;
 		v=g->edges[i].t;
-		g->mat[u+g->n*v]=1;
-		g->mat[v+g->n*u]=1;
+		g->adj[ g->cd[u] + d[u]++ ]=v;
+		g->adj[ g->cd[v] + d[v]++ ]=u;
 	}
+
+	free(d);
+	//free(g->edges);
 }
 
 
-void free_adjmatrix(adjmatrix *g){
+//freeing memory
+void free_adjlist(adjlist *g){
 	free(g->edges);
-	free(g->mat);
+	free(g->cd);
+	free(g->adj);
 	free(g);
 }
 
 int main(int argc,char** argv){
-	adjmatrix* g;
+	adjlist* g;
 	time_t t1,t2;
 
 	t1=time(NULL);
@@ -107,10 +126,10 @@ int main(int argc,char** argv){
 	printf("Number of nodes: %lu\n",g->n);
 	printf("Number of edges: %lu\n",g->e);
 
-	printf("Building the adjacency matrix\n");
-	mkmatrix(g);
+	printf("Building the adjacency list\n");
+	mkadjlist(g);
 	
-	free_adjmatrix(g);
+	free_adjlist(g);
 
 	t2=time(NULL);
 
