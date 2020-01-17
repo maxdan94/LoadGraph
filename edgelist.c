@@ -13,7 +13,7 @@ To compile:
 To execute:
 "./edgelist edgelist.txt".
 "edgelist.txt" should contain the graph: one edge on each line (two unsigned long (nodes' ID)) separated by a space.
-The prograph will load the graph in main memory and then terminate.
+The prograph loads the graph in main memory and then it terminates.
 
 Note:
 If the graph is directed (and weighted) with selfloops and you want to make it undirected unweighted without selfloops, use the following linux command line.
@@ -51,21 +51,22 @@ inline unsigned long max3(unsigned long a,unsigned long b,unsigned long c){
 //reading the edgelist from file
 edgelist* readedgelist(char* input){
 	unsigned long e1=NLINKS;
-	edgelist *g=malloc(sizeof(edgelist));
-	FILE *file;
+	FILE *file=fopen(input,"r");
 
+	edgelist *g=malloc(sizeof(edgelist));
 	g->n=0;
 	g->e=0;
-	file=fopen(input,"r");
-	g->edges=malloc(e1*sizeof(edge));
+	g->edges=malloc(e1*sizeof(edge));//allocate some RAM to store edges
+
 	while (fscanf(file,"%lu %lu", &(g->edges[g->e].s), &(g->edges[g->e].t))==2) {
 		g->n=max3(g->n,g->edges[g->e].s,g->edges[g->e].t);
-		if (g->e++==e1) {
+		if (g->e++==e1) {//increase allocated RAM if needed
 			e1+=NLINKS;
 			g->edges=realloc(g->edges,e1*sizeof(edge));
 		}
 	}
 	fclose(file);
+
 	g->n++;
 
 	g->edges=realloc(g->edges,g->e*sizeof(edge));

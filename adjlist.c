@@ -125,7 +125,7 @@ int main(int argc,char** argv){
 	printf("Number of nodes: %lu\n",g->n);
 	printf("Number of edges: %lu\n",g->e);
 
-	printf("Building the adjacency matrix\n");
+	printf("Building the adjacency list\n");
 	mkadjlist(g);
 	
 	free_adjlist(g);
