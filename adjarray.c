@@ -5,7 +5,7 @@ http://bit.ly/danisch
 maximilien.danisch@gmail.com
 
 Info:
-Feel free to use these lines as you wish. This program loads a graph in main memory as a list of edges.
+Feel free to use these lines as you wish. This program loads a graph in main memory.
 
 To compile:
 "gcc adjlist.c -O9 -o adjlist".
